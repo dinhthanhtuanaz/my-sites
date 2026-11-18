@@ -84,7 +84,21 @@ function render() {
   $("timeline").innerHTML = all;
 }
 
-render();
-// Cập nhật khi sang ngày mới mà trang vẫn mở
-setInterval(render, 30 * 60 * 1000);
-document.addEventListener("visibilitychange", () => { if (!document.hidden) render(); });
+const WD = ["Chủ nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"];
+const pad = n => String(n).padStart(2, "0");
+let shownDay = "";
+
+function tick() {
+  const n = new Date();
+  $("clockTime").textContent = pad(n.getHours()) + ":" + pad(n.getMinutes()) + ":" + pad(n.getSeconds());
+  const day = n.getFullYear() + "-" + n.getMonth() + "-" + n.getDate();
+  if (day !== shownDay) { // sang ngày mới (hoặc lần đầu) thì tính lại tuần
+    shownDay = day;
+    $("clockDate").textContent = WD[n.getDay()] + ", " + fmt(n);
+    render();
+  }
+}
+
+tick();
+setInterval(tick, 1000);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) tick(); });

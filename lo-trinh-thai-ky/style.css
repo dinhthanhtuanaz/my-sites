@@ -41,6 +41,20 @@ body {
   padding: max(20px, env(safe-area-inset-top)) 16px 20px;
   background: linear-gradient(160deg, var(--accent-soft), var(--bg));
 }
+.clock {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: center;
+  margin-bottom: 14px;
+  padding: 6px 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  color: var(--accent);
+}
+.clock span { font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--text); }
+.clock small { font-size: 12px; color: var(--muted); }
 .eyebrow { margin: 0; color: var(--muted); font-size: 14px; }
 h1 { margin: 4px 0 0; font-size: clamp(52px, 17vw, 84px); color: var(--accent); line-height: 1.05; }
 .sub { margin: 4px 0 18px; font-size: 18px; font-weight: 600; }
@@ -66,7 +80,7 @@ h1 { margin: 4px 0 0; font-size: clamp(52px, 17vw, 84px); color: var(--accent); 
   max-width: 460px;
   margin: 0 auto 16px;
 }
-.stat { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 10px; }
+.stat { display: flex; flex-direction: column-reverse; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 10px; }
 .stat b { display: block; font-size: 18px; }
 .stat span { font-size: 12px; color: var(--muted); }
 
