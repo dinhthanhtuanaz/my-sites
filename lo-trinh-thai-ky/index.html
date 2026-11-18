@@ -12,9 +12,24 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Lộ trình thai kỳ">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <link rel="stylesheet" href="style.css?v=4">
+  <link rel="stylesheet" href="style.css?v=9">
 </head>
 <body>
+  <button id="menuBtn" class="menu-btn" type="button" aria-label="Mở menu" aria-expanded="false" aria-controls="drawer">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+  </button>
+  <div id="backdrop" class="backdrop" hidden></div>
+  <nav id="drawer" class="drawer" aria-label="Điều hướng" aria-hidden="true">
+    <p class="drawer-title">Lộ trình thai kỳ</p>
+    <a href="#" data-go="top">🏠 Tổng quan</a>
+    <a href="#" data-go="upcoming">📅 Tuần này &amp; 4 tuần tới</a>
+    <a href="#" data-go="milestones">🩺 Mốc khám quan trọng</a>
+    <a href="#" data-go="profile">🤰 Thông tin thai sản</a>
+    <a href="#" data-go="tri1">🌱 Tam cá nguyệt 1 <small>tuần 1–13</small></a>
+    <a href="#" data-go="tri2">🌿 Tam cá nguyệt 2 <small>tuần 14–27</small></a>
+    <a href="#" data-go="tri3">🌳 Tam cá nguyệt 3 <small>tuần 28–40</small></a>
+  </nav>
+
   <header class="hero">
     <div class="clock" aria-label="Đồng hồ">
       <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
@@ -42,17 +57,27 @@
   </header>
 
   <main>
-    <h2>Tuần hiện tại &amp; 8 tuần tới</h2>
+    <h2 id="upcomingTitle">Tuần hiện tại &amp; 4 tuần tới</h2>
     <div id="upcoming" class="list"></div>
 
-    <details class="all">
+    <h2 id="milestonesTitle" class="sec">Mốc khám quan trọng</h2>
+    <div id="milestones" class="miles"></div>
+
+    <h2 id="profileTitle" class="sec">Thông tin thai sản</h2>
+    <div id="profile"></div>
+
+    <details class="all" id="all">
       <summary>Xem toàn bộ mốc tuần 1 → 40</summary>
       <div id="timeline"></div>
     </details>
     <p class="note">Thông tin chỉ mang tính tham khảo, hãy theo lịch khám và tư vấn của bác sĩ.</p>
   </main>
 
-  <script src="data.js?v=3"></script>
-  <script src="app.js?v=3"></script>
+  <button id="toTop" class="to-top" type="button" aria-label="Về đầu trang" hidden>
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  </button>
+
+  <script src="data.js?v=9"></script>
+  <script src="app.js?v=9"></script>
 </body>
 </html>

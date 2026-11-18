@@ -14,8 +14,8 @@ function today() {
 }
 
 // Tuần N: từ LMP + 7N ngày đến LMP + 7N + 6 ngày
-function card(w, cur) {
-  const [fruit, len, wt, note] = WEEKS[w - 1];
+function card(w, cur, withId) {
+  const [fruit, len, wt, note, tip] = WEEKS[w - 1];
   const start = addDays(LMP, w * 7);
   const end = addDays(start, 6);
   const cls = w < cur ? "past" : w === cur ? "current" : "future";
@@ -24,11 +24,89 @@ function card(w, cur) {
   const tag = cls === "current" ? '<span class="badge">Hiện tại</span>'
     : cls === "past" ? '<span class="check">✓</span>'
     : '<span class="in">' + (w - cur) + " tuần nữa</span>";
-  return '<article class="card ' + cls + '">' +
+  return '<article class="card ' + cls + '"' + (withId ? ' id="w' + w + '"' : "") + ">" +
     '<div class="card-head"><span class="wk">Tuần ' + w + "</span>" + tag + "</div>" +
     '<p class="date">' + range + "</p>" +
     '<p class="fruit">' + fruit + "</p>" + size +
-    '<p class="desc">' + note + "</p></article>";
+    '<p class="desc">' + note + "</p>" +
+    '<p class="tip"><b>💡 Lưu ý:</b> ' + tip + "</p></article>";
+}
+
+// ----- Thông tin mẹ bầu & cân nặng gợi ý (theo khuyến nghị IOM 2009, nội suy tuyến tính) -----
+const kg = x => x.toFixed(1).replace(".", ",");
+
+// Tổng mức tăng cân khuyến nghị cả thai kỳ theo BMI trước mang thai
+function gainRange(bmi) {
+  if (bmi < 18.5) return { name: "thiếu cân", total: [12.5, 18] };
+  if (bmi < 25) return { name: "bình thường", total: [11.5, 16] };
+  if (bmi < 30) return { name: "thừa cân", total: [7, 11.5] };
+  return { name: "béo phì", total: [5, 9] };
+}
+
+// Mức tăng cân (kg) khuyến nghị tới tuần w: 3 tháng đầu tăng 0,5–2 kg, sau đó tăng đều tới tổng khuyến nghị
+function gainAt(w, total) {
+  const [lo, hi] = total;
+  if (w <= 13) return [(0.5 * w) / 13, (2 * w) / 13];
+  const f = (w - 13) / 27;
+  return [0.5 + (lo - 0.5) * f, 2 + (hi - 2) * f];
+}
+
+function renderProfile(cur, t) {
+  const P = PROFILE;
+  const bmi = P.preWeightKg / Math.pow(P.heightCm / 100, 2);
+  const g = gainRange(bmi);
+  const age = t.getFullYear() - P.birthYear;
+  const row = (k, v) => '<div class="pf-row"><span>' + k + "</span><b>" + v + "</b></div>";
+
+  let h = '<div class="pf-card">' +
+    row("Mẹ bầu", P.name) +
+    row("Năm sinh", P.birthYear + " (" + age + " tuổi)") +
+    row("Chiều cao", (P.heightCm / 100).toFixed(2).replace(".", ",") + " m") +
+    row("Cân nặng trước mang thai", kg(P.preWeightKg) + " kg") +
+    row("BMI trước mang thai", kg(bmi) + " (" + g.name + ")") +
+    row("Nên tăng cả thai kỳ", kg(g.total[0]) + " – " + kg(g.total[1]) + " kg") +
+    row("Cân nặng mục tiêu tuần 40", kg(P.preWeightKg + g.total[0]) + " – " + kg(P.preWeightKg + g.total[1]) + " kg") +
+    "</div>";
+
+  if (bmi >= 18.5 && bmi < 19.5) {
+    h += '<p class="pf-note">BMI đang sát ngưỡng thiếu cân (18,5). Bác sĩ có thể khuyên tăng nhiều hơn, khoảng 12,5–18 kg cả thai kỳ.</p>';
+  }
+
+  // Cân nặng mới nhất so với khuyến nghị
+  const log = P.weights.slice().sort((a, b) => a[0] - b[0]);
+  if (log.length) {
+    const [lw, lkg] = log[log.length - 1];
+    const [lo, hi] = gainAt(lw, g.total).map(x => P.preWeightKg + x);
+    const gained = lkg - P.preWeightKg;
+    let cls, msg;
+    if (lkg < lo - 0.05) {
+      cls = "low";
+      msg = "Thấp hơn khuyến nghị khoảng " + kg(lo - lkg) + " kg. Nên trao đổi với bác sĩ ở lần khám tới: ăn đủ đạm, năng lượng, thêm bữa phụ và theo dõi cân đều mỗi tuần.";
+    } else if (lkg > hi + 0.05) {
+      cls = "high";
+      msg = "Cao hơn khuyến nghị khoảng " + kg(lkg - hi) + " kg. Nên hạn chế đồ ngọt, nhiều dầu mỡ và hỏi bác sĩ về chế độ ăn.";
+    } else {
+      cls = "ok";
+      msg = "Đang nằm trong khoảng khuyến nghị. Hãy duy trì chế độ ăn và vận động nhẹ.";
+    }
+    h += '<div class="pf-status ' + cls + '"><b>Tuần ' + lw + ": " + kg(lkg) + " kg (" + (gained >= 0 ? "+" : "") + kg(gained) + " kg)</b>" +
+      "<span>Khuyến nghị tuần " + lw + ": " + kg(lo) + " – " + kg(hi) + " kg</span><p>" + msg + "</p></div>";
+  }
+
+  // Bảng cân nặng gợi ý theo mốc
+  const actual = {};
+  log.forEach(([w, x]) => { actual[w] = x; });
+  h += '<table class="wt"><thead><tr><th>Tuần</th><th>Nên tăng</th><th>Cân nặng gợi ý</th><th>Thực tế</th></tr></thead><tbody>';
+  [13, 20, 25, 28, 32, 36, 40].forEach(w => {
+    const [a, b] = gainAt(w, g.total);
+    const real = actual[w] !== undefined ? kg(actual[w]) + " kg" : "–";
+    h += "<tr" + (w === cur ? ' class="now"' : "") + "><td>" + w + "</td><td>" + kg(a) + "–" + kg(b) + " kg</td><td><b>" +
+      kg(P.preWeightKg + a) + "–" + kg(P.preWeightKg + b) + " kg</b></td><td>" + real + "</td></tr>";
+  });
+  h += "</tbody></table>" +
+    '<p class="pf-note">Mức gợi ý được ước tính từ khuyến nghị chung (IOM 2009) theo BMI trước mang thai, chỉ để tham khảo. Mỗi người tăng cân khác nhau, hãy theo tư vấn của bác sĩ.</p>';
+
+  $("profile").innerHTML = h;
 }
 
 function render() {
@@ -69,18 +147,38 @@ function render() {
 
   const cur = Math.min(40, Math.max(1, weeks));
 
-  // Tuần hiện tại + 8 tuần tiếp theo
+  // Tuần hiện tại + 4 tuần tiếp theo
   let up = "";
-  for (let w = cur; w <= Math.min(40, cur + 8); w++) up += card(w, cur);
+  for (let w = cur; w <= Math.min(40, cur + 4); w++) up += card(w, cur);
   $("upcoming").innerHTML = up;
 
-  // Toàn bộ 40 tuần, gom theo tháng
-  let all = "";
-  for (let mo = 0; mo < 10; mo++) {
-    all += '<section class="month"><h3>Tháng ' + (mo + 1) + " <small>Tuần " + (mo * 4 + 1) + "–" + (mo * 4 + 4) + '</small></h3><div class="list">';
-    for (let w = mo * 4 + 1; w <= mo * 4 + 4; w++) all += card(w, cur);
-    all += "</div></section>";
+  // Mốc khám quan trọng
+  let ms = "";
+  for (const [from, to, title] of MILESTONES) {
+    const label = from === to ? "Tuần " + from : "Tuần " + from + "–" + to;
+    let st;
+    if (to < cur) st = '<span class="check">✓ Đã qua</span>';
+    else if (from <= cur) st = '<span class="badge">Đang diễn ra</span>';
+    else st = '<span class="in">còn ' + (from - cur) + " tuần</span>";
+    ms += '<button type="button" class="mile" data-week="' + from + '"><span><b>' + label + "</b> " + title + "</span>" + st + "</button>";
   }
+  $("milestones").innerHTML = ms;
+
+  renderProfile(cur, t);
+
+  // Toàn bộ 40 tuần, chia 3 tam cá nguyệt (bấm vào mới mở)
+  const TRI = [
+    ["Tam cá nguyệt 1 (3 tháng đầu)", 1, 13],
+    ["Tam cá nguyệt 2 (3 tháng giữa)", 14, 27],
+    ["Tam cá nguyệt 3 (3 tháng cuối)", 28, 40],
+  ];
+  const wasOpen = [...document.querySelectorAll(".tri")].map(d => d.open); // giữ trạng thái mở khi tự cập nhật
+  let all = "";
+  TRI.forEach(([name, from, to], i) => {
+    all += '<details class="tri" id="tri' + (i + 1) + '"' + (wasOpen[i] ? " open" : "") + "><summary>" + name + " <small>Tuần " + from + "–" + to + '</small></summary><div class="list">';
+    for (let w = from; w <= to; w++) all += card(w, cur, true);
+    all += "</div></details>";
+  });
   $("timeline").innerHTML = all;
 }
 
@@ -98,6 +196,71 @@ function tick() {
     render();
   }
 }
+
+// ----- Menu điều hướng -----
+const drawer = $("drawer"), backdrop = $("backdrop"), menuBtn = $("menuBtn");
+
+function setMenu(open) {
+  drawer.classList.toggle("open", open);
+  drawer.setAttribute("aria-hidden", String(!open));
+  backdrop.hidden = !open;
+  menuBtn.setAttribute("aria-expanded", String(open));
+  document.body.classList.toggle("no-scroll", open);
+}
+
+function scrollToEl(el) {
+  const y = el.getBoundingClientRect().top + window.scrollY - 70; // chừa chỗ cho nút menu
+  window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+}
+
+function openTriOf(week) {
+  $("all").open = true;
+  const i = week <= 13 ? 1 : week <= 27 ? 2 : 3;
+  $("tri" + i).open = true;
+}
+
+function jumpWeek(w) {
+  openTriOf(w);
+  const el = $("w" + w);
+  if (!el) return;
+  scrollToEl(el);
+  el.classList.remove("flash");
+  void el.offsetWidth; // chạy lại hiệu ứng
+  el.classList.add("flash");
+}
+
+function go(target) {
+  if (target === "top") window.scrollTo({ top: 0, behavior: "smooth" });
+  else if (target === "upcoming") scrollToEl($("upcomingTitle"));
+  else if (target === "milestones") scrollToEl($("milestonesTitle"));
+  else if (target === "profile") scrollToEl($("profileTitle"));
+  else if (target.startsWith("tri")) {
+    $("all").open = true;
+    const d = $(target);
+    d.open = true;
+    scrollToEl(d);
+  }
+}
+
+menuBtn.addEventListener("click", () => setMenu(!drawer.classList.contains("open")));
+backdrop.addEventListener("click", () => setMenu(false));
+document.addEventListener("keydown", e => { if (e.key === "Escape") setMenu(false); });
+drawer.addEventListener("click", e => {
+  const a = e.target.closest("[data-go]");
+  if (!a) return;
+  e.preventDefault();
+  setMenu(false);
+  setTimeout(() => go(a.dataset.go), 50); // chờ khóa cuộn được gỡ rồi mới cuộn
+});
+$("milestones").addEventListener("click", e => {
+  const b = e.target.closest("[data-week]");
+  if (b) jumpWeek(+b.dataset.week);
+});
+
+// Nút cuộn về đầu trang: chỉ hiện khi đã cuộn xuống
+const toTop = $("toTop");
+toTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+window.addEventListener("scroll", () => { toTop.hidden = window.scrollY < 300; }, { passive: true });
 
 tick();
 setInterval(tick, 1000);
