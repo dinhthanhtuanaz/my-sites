@@ -109,6 +109,52 @@ function renderProfile(cur, t) {
   $("profile").innerHTML = h;
 }
 
+// ----- Lịch âm & kỳ nghỉ -----
+const WD_SHORT = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];
+const toDate = a => new Date(a[0], a[1] - 1, a[2]);
+
+function pregAt(d) { // tuần + ngày thai tại ngày d
+  const n = Math.round((d - LMP) / DAY);
+  return "tuần " + Math.floor(n / 7) + " + " + (n % 7) + " ngày";
+}
+
+function renderCalendar(t) {
+  const start = toDate(CAL_START), leaveFrom = toDate(LEAVE.from), leaveTo = toDate(LEAVE.to);
+  const hFrom = toDate(HUSBAND_LEAVE.from), hTo = toDate(HUSBAND_LEAVE.to);
+  const end = new Date(DUE.getFullYear(), DUE.getMonth() + 1, 0); // hết tháng chứa ngày dự sinh
+  const nDays = (a, b) => Math.round((b - a) / DAY) + 1;
+  const ovFrom = hFrom > leaveFrom ? hFrom : leaveFrom, ovTo = hTo < leaveTo ? hTo : leaveTo;
+  const k = '<div class="pf-status ok"><b>Vợ nghỉ: ' + fmt(leaveFrom) + " → " + fmt(leaveTo) + "</b><span>" + nDays(leaveFrom, leaveTo) + " ngày · từ " +
+    pregAt(leaveFrom) + " đến " + pregAt(leaveTo) + "</span></div>" +
+    '<div class="pf-status hl"><b>Chồng nghỉ: ' + fmt(hFrom) + " → " + fmt(hTo) + "</b><span>" + nDays(hFrom, hTo) + " ngày liên tục" +
+    (ovFrom <= ovTo ? " · cả hai cùng nghỉ " + nDays(ovFrom, ovTo) + " ngày (" + fmt(ovFrom) + " → " + fmt(ovTo) + ")" : "") + "</span></div>";
+  $("keydays").innerHTML = k;
+
+  // Lưới lịch theo tháng
+  let h = '<div class="legend"><i class="lg leave"></i>Vợ nghỉ <i class="lg hleave"></i>Chồng nghỉ <i class="lg due"></i>Dự sinh</div>';
+  for (let m = new Date(start.getFullYear(), start.getMonth(), 1); m <= end; m = new Date(m.getFullYear(), m.getMonth() + 1, 1)) {
+    const last = new Date(m.getFullYear(), m.getMonth() + 1, 0).getDate();
+    const lead = (m.getDay() + 6) % 7; // tuần bắt đầu từ thứ 2
+    h += '<details class="tri"' + (m.getMonth() < 2 ? " open" : "") + "><summary>Tháng " + (m.getMonth() + 1) + "/" + m.getFullYear() + '</summary><div class="cal">';
+    WD_SHORT.forEach(x => { h += '<div class="cw">' + x + "</div>"; });
+    for (let i = 0; i < lead; i++) h += "<div></div>";
+    for (let day = 1; day <= last; day++) {
+      const d = new Date(m.getFullYear(), m.getMonth(), day);
+      if (d < start) { h += "<div></div>"; continue; }
+      const [ld, lm, , leap] = solarToLunar(day, m.getMonth() + 1, m.getFullYear());
+      let c = "cd";
+      if (d >= leaveFrom && d <= leaveTo) c += " leave";
+      if (d >= hFrom && d <= hTo) c += " hleave";
+      if (+d === +DUE) c += " due";
+      if (+d === +t) c += " today";
+      if (ld === 1) c += " first";
+      h += '<div class="' + c + '"><b>' + day + "</b><small>" + (ld === 1 ? "1/" + lm + (leap ? "n" : "") : ld) + "</small></div>";
+    }
+    h += "</div></details>";
+  }
+  $("calendar").innerHTML = h;
+}
+
 function render() {
   const t = today();
   const days = Math.round((t - LMP) / DAY);
@@ -165,6 +211,7 @@ function render() {
   $("milestones").innerHTML = ms;
 
   renderProfile(cur, t);
+  renderCalendar(t);
 
   // Toàn bộ 40 tuần, chia 3 tam cá nguyệt (bấm vào mới mở)
   const TRI = [
@@ -234,6 +281,7 @@ function go(target) {
   else if (target === "upcoming") scrollToEl($("upcomingTitle"));
   else if (target === "milestones") scrollToEl($("milestonesTitle"));
   else if (target === "profile") scrollToEl($("profileTitle"));
+  else if (target === "calendar") scrollToEl($("calendarTitle"));
   else if (target.startsWith("tri")) {
     $("all").open = true;
     const d = $(target);

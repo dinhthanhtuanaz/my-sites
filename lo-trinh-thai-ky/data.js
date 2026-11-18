@@ -7,6 +7,11 @@ const PROFILE = {
   weights: [[25, 49]]
 };
 
+// Kỳ nghỉ của mẹ bầu và khoảng lịch hiển thị: [năm, tháng, ngày]
+const LEAVE = { from: [2027, 1, 30], to: [2027, 2, 14] };
+const HUSBAND_LEAVE = { from: [2027, 2, 4], to: [2027, 2, 10] }; // chồng nghỉ 7 ngày liên tục
+const CAL_START = [2027, 1, 1]; // lịch bắt đầu từ ngày này, kết thúc hết tháng chứa ngày dự sinh
+
 // Mốc khám quan trọng: [từ tuần, đến tuần, tên mốc]
 const MILESTONES = [
   [11, 13, "Siêu âm độ mờ da gáy, sàng lọc"],

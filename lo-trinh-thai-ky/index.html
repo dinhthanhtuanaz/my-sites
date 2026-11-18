@@ -12,7 +12,7 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Lộ trình thai kỳ">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <link rel="stylesheet" href="style.css?v=9">
+  <link rel="stylesheet" href="style.css?v=12">
 </head>
 <body>
   <button id="menuBtn" class="menu-btn" type="button" aria-label="Mở menu" aria-expanded="false" aria-controls="drawer">
@@ -25,6 +25,7 @@
     <a href="#" data-go="upcoming">📅 Tuần này &amp; 4 tuần tới</a>
     <a href="#" data-go="milestones">🩺 Mốc khám quan trọng</a>
     <a href="#" data-go="profile">🤰 Thông tin thai sản</a>
+    <a href="#" data-go="calendar">📆 Lịch âm &amp; kỳ nghỉ Tết</a>
     <a href="#" data-go="tri1">🌱 Tam cá nguyệt 1 <small>tuần 1–13</small></a>
     <a href="#" data-go="tri2">🌿 Tam cá nguyệt 2 <small>tuần 14–27</small></a>
     <a href="#" data-go="tri3">🌳 Tam cá nguyệt 3 <small>tuần 28–40</small></a>
@@ -66,6 +67,10 @@
     <h2 id="profileTitle" class="sec">Thông tin thai sản</h2>
     <div id="profile"></div>
 
+    <h2 id="calendarTitle" class="sec">Lịch âm &amp; kỳ nghỉ Tết</h2>
+    <div id="keydays" class="miles"></div>
+    <div id="calendar"></div>
+
     <details class="all" id="all">
       <summary>Xem toàn bộ mốc tuần 1 → 40</summary>
       <div id="timeline"></div>
@@ -77,7 +82,8 @@
     <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
   </button>
 
-  <script src="data.js?v=9"></script>
-  <script src="app.js?v=9"></script>
+  <script src="lunar.js?v=12"></script>
+  <script src="data.js?v=12"></script>
+  <script src="app.js?v=12"></script>
 </body>
 </html>

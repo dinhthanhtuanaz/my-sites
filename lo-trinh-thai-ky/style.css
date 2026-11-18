@@ -230,6 +230,32 @@ h2 { margin: 0 0 12px; font-size: 20px; }
 .wt th { color: var(--muted); font-weight: 600; font-size: 12px; }
 .wt tr:last-child td { border-bottom: 0; }
 .wt tr.now { background: var(--accent-soft); }
+/* Lịch âm */
+.miles .mile { text-align: left; align-items: flex-start; }
+#keydays .mile { cursor: default; line-height: 1.35; }
+#keydays .pf-status { margin: 0 0 4px; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; margin: 14px 0 4px; font-size: 12px; color: var(--muted); }
+.lg { display: inline-block; width: 12px; height: 12px; border-radius: 4px; margin-right: -6px; }
+.lg.leave { background: var(--done); }
+.lg.due { background: var(--accent); }
+.lg.hleave { background: #d9534f; }
+.pf-status.hl { border-left-color: #d9534f; margin-top: 6px; }
+.cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.cw { text-align: center; font-size: 11px; color: var(--muted); padding: 2px 0; }
+.cd { text-align: center; padding: 5px 0 4px; border-radius: 10px; background: var(--card); border: 1px solid var(--border); line-height: 1.15; }
+.cd b { display: block; font-size: 15px; }
+.cd small { font-size: 10px; color: var(--muted); }
+.cd.first small { color: var(--accent); font-weight: 700; }
+.cd.leave { background: color-mix(in srgb, var(--done) 35%, var(--card)); border-color: var(--done); }
+.cd.hleave { background: color-mix(in srgb, #d9534f 35%, var(--card)); border-color: #d9534f; }
+/* cả hai cùng nghỉ: nửa xanh, nửa đỏ */
+.cd.leave.hleave {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--done) 45%, var(--card)) 50%, color-mix(in srgb, #d9534f 45%, var(--card)) 50%);
+  border-color: var(--border);
+}
+.cd.due { background: var(--accent); border-color: var(--accent); color: #fff; }
+.cd.due small { color: #fff; }
+.cd.today { outline: 2px solid var(--text); outline-offset: 1px; }
 .flash { animation: flash 1.6s ease-out; }
 @keyframes flash { 0%, 40% { box-shadow: 0 0 0 4px var(--accent); } 100% { box-shadow: 0 0 0 0 transparent; } }
 
