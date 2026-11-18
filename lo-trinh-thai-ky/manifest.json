@@ -1,6 +1,6 @@
 {
   "name": "Lộ trình thai kỳ",
-  "short_name": "Thai kỳ",
+  "short_name": "Lộ trình thai kỳ",
   "description": "Theo dõi tuần thai, quy đổi tháng và các mốc quan trọng",
   "start_url": "./index.html",
   "scope": "./",
