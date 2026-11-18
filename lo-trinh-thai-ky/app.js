@@ -155,6 +155,17 @@ function renderCalendar(t) {
   $("calendar").innerHTML = h;
 }
 
+function renderStage(weeks) {
+  const w = Math.min(40, Math.max(1, weeks));
+  const s = STAGES.find(x => w <= x[0])[1];
+  const row = (icon, label, text) => '<p><span class="ic">' + icon + "</span><span><b>" + label + ":</b> " + text + "</span></p>";
+  $("stage").innerHTML =
+    '<div class="st-col"><h3>👶 Bé tuần ' + w + "</h3>" +
+      row("😴", "Ngủ", s.baby[0]) + row("👂", "Nghe", s.baby[1]) + row("🦶", "Đạp", s.baby[2]) + "</div>" +
+    '<div class="st-col"><h3>🤰 Mẹ nên</h3>' +
+      row("🍽️", "Ăn uống", s.mom[0]) + row("🛏️", "Ngủ nghỉ", s.mom[1]) + "</div>";
+}
+
 function render() {
   const t = today();
   const days = Math.round((t - LMP) / DAY);
@@ -210,6 +221,7 @@ function render() {
   }
   $("milestones").innerHTML = ms;
 
+  renderStage(weeks);
   renderProfile(cur, t);
   renderCalendar(t);
 

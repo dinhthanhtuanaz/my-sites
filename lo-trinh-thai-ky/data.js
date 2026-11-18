@@ -1,3 +1,40 @@
+// Tình trạng bé & lời khuyên cho mẹ theo giai đoạn: [đến hết tuần, {baby: [ngủ, nghe, đạp], mom: [ăn uống, ngủ nghỉ]}]
+// Thông tin tổng quát để tham khảo, không thay thế tư vấn của bác sĩ.
+const STAGES = [
+  [6, {
+    baby: ["Chưa có chu kỳ ngủ - thức", "Chưa nghe được (tai chưa hình thành)", "Chưa cử động, tim bắt đầu đập"],
+    mom: ["Uống axit folic, chia nhiều bữa nhỏ nếu buồn nôn, uống đủ nước", "Ngủ đủ 8 giờ. Buồn ngủ ban ngày là bình thường"]
+  }],
+  [13, {
+    baby: ["Chưa có chu kỳ ngủ rõ ràng", "Tai trong đang hình thành, chưa nghe được", "Đã cử động nhưng mẹ chưa cảm nhận được"],
+    mom: ["Chưa cần ăn thêm năng lượng; ưu tiên đủ chất, ăn nhiều bữa nhỏ", "Dễ mệt, ngủ trưa 20–30 phút nếu cần"]
+  }],
+  [17, {
+    baby: ["Cử động xen kẽ lúc nghỉ, chưa thành chu kỳ rõ", "Tai đang hoàn thiện, chưa nghe rõ", "Mẹ có thể bắt đầu thấy nhẹ như bong bóng, cánh bướm (thường từ tuần 16–20)"],
+    mom: ["Thêm khoảng 300 kcal/ngày; ưu tiên đạm, sắt, canxi", "Ngủ 7–9 giờ, tập nằm nghiêng"]
+  }],
+  [22, {
+    baby: ["Ngủ phần lớn thời gian trong ngày, thức ngắn xen kẽ", "Bắt đầu nghe được nhịp tim mẹ và tiếng động lớn", "Thai máy rõ dần: đạp nhẹ, lăn, xoay"],
+    mom: ["Thêm khoảng 340 kcal/ngày; đủ đạm (thịt, cá, trứng, sữa), sắt, canxi", "Ngủ 7–9 giờ, nằm nghiêng và kê gối giữa hai chân"]
+  }],
+  [27, {
+    baby: ["Ngủ khoảng 90% thời gian, mỗi chu kỳ ngủ chỉ 20–40 phút", "Nghe được giọng mẹ, giật mình khi có tiếng động lớn", "Đạp và huých rõ; có thể giật nhịp đều khi bé nấc cụt"],
+    mom: ["Thêm khoảng 340 kcal/ngày; chia 5–6 bữa nhỏ, ưu tiên đạm, sắt, canxi", "Ngủ 7–9 giờ, nằm nghiêng, kê gối đỡ bụng và lưng"]
+  }],
+  [31, {
+    baby: ["Ngủ khoảng 90% ngày, chu kỳ ngủ - thức rõ ràng", "Phân biệt được giọng mẹ, phản ứng với tiếng nói và nhạc", "Đạp mạnh. Bắt đầu đếm thai máy: đủ 10 cử động trong 2 giờ"],
+    mom: ["Thêm khoảng 450 kcal/ngày; ăn nhiều bữa nhỏ để tránh ợ nóng", "Nằm nghiêng trái, tránh nằm ngửa lâu, kê cao đầu khi ợ nóng"]
+  }],
+  [35, {
+    baby: ["Ngủ khoảng 18–20 giờ/ngày", "Nhận ra giọng mẹ, thích nghe giọng quen thuộc", "Chật dần nên đạp ít rộng hơn, nhưng vẫn đều: huých, lăn, nhấp nhô"],
+    mom: ["Ăn nhiều bữa nhỏ, đủ đạm và sắt, uống đủ nước, hạn chế đồ ngọt", "Nghỉ ngơi thêm ban ngày, nằm nghiêng trái, ngủ kê gối cao"]
+  }],
+  [40, {
+    baby: ["Ngủ khoảng 18–20 giờ/ngày", "Nghe rõ, quen giọng mẹ và người thân", "Vẫn đạp đều; nếu giảm rõ rệt hoặc bất thường cần đi khám ngay"],
+    mom: ["Ăn nhẹ, đủ chất, uống đủ nước; ăn đủ năng lượng trước khi chuyển dạ", "Ngủ nghỉ tối đa, nằm nghiêng trái, đi bộ nhẹ nhàng. Đến viện khi có dấu hiệu chuyển dạ"]
+  }]
+];
+
 // Thông tin mẹ bầu. weights: danh sách cân nặng đã đo [tuần thai, kg] - thêm dòng mới mỗi lần cân.
 const PROFILE = {
   name: "Đỗ Thị Chinh",
