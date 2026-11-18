@@ -1,0 +1,121 @@
+:root {
+  --bg: #fff7f5;
+  --card: #ffffff;
+  --text: #3a2a2e;
+  --muted: #8a757b;
+  --accent: #e8647c;
+  --accent-soft: #fde3e8;
+  --done: #7bb899;
+  --border: #f1dde1;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1d1618;
+    --card: #2a2023;
+    --text: #f5e9ec;
+    --muted: #b49ca3;
+    --accent: #f07c92;
+    --accent-soft: #4a2832;
+    --done: #6fae8e;
+    --border: #3d2d32;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.45;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Màn hình đầu: vừa đúng 1 màn hình điện thoại */
+.hero {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  padding: max(20px, env(safe-area-inset-top)) 16px 20px;
+  background: linear-gradient(160deg, var(--accent-soft), var(--bg));
+}
+.eyebrow { margin: 0; color: var(--muted); font-size: 14px; }
+h1 { margin: 4px 0 0; font-size: clamp(52px, 17vw, 84px); color: var(--accent); line-height: 1.05; }
+.sub { margin: 4px 0 18px; font-size: 18px; font-weight: 600; }
+
+.month-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px 12px;
+  margin: 0 auto 12px;
+  width: 100%;
+  max-width: 460px;
+}
+.month-box .label { display: block; font-size: 12px; color: var(--muted); }
+.month-box b { display: block; font-size: clamp(22px, 7vw, 30px); margin: 2px 0; }
+.month-box small { color: var(--muted); font-size: 13px; }
+
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+  max-width: 460px;
+  margin: 0 auto 16px;
+}
+.stat { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 10px; }
+.stat b { display: block; font-size: 18px; }
+.stat span { font-size: 12px; color: var(--muted); }
+
+.bar { width: 100%; max-width: 460px; margin: 0 auto; height: 10px; background: var(--border); border-radius: 99px; overflow: hidden; }
+.bar-fill { height: 100%; background: var(--accent); border-radius: 99px; transition: width .6s; }
+.bar-label { margin: 6px 0 0; font-size: 12px; color: var(--muted); }
+.hint { margin: 18px 0 0; font-size: 13px; color: var(--accent); animation: bob 1.8s ease-in-out infinite; }
+@keyframes bob { 50% { transform: translateY(4px); } }
+
+main { max-width: 640px; margin: 0 auto; padding: 24px 14px 48px; }
+h2 { margin: 0 0 12px; font-size: 20px; }
+.list { display: grid; gap: 10px; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 5px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+.card.past { border-left-color: var(--done); opacity: .8; }
+.card.future { border-left-color: var(--accent-soft); }
+.card.current { border: 2px solid var(--accent); border-left-width: 5px; box-shadow: 0 6px 20px rgba(232,100,124,.22); }
+.card-head { display: flex; justify-content: space-between; align-items: center; }
+.wk { font-weight: 700; font-size: 18px; }
+.badge { background: var(--accent); color: #fff; font-size: 12px; padding: 2px 10px; border-radius: 99px; }
+.in { font-size: 12px; color: var(--muted); }
+.check { color: var(--done); font-weight: 700; }
+.card p { margin: 3px 0 0; }
+.date { font-size: 14px; font-weight: 600; }
+.fruit { font-weight: 600; color: var(--accent); }
+.size { font-size: 13px; color: var(--muted); }
+.desc { font-size: 14px; }
+
+.all { margin-top: 24px; }
+.all summary {
+  cursor: pointer;
+  padding: 14px;
+  text-align: center;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  font-weight: 600;
+  color: var(--accent);
+}
+.month h3 { margin: 22px 0 8px; font-size: 17px; }
+.month h3 small { color: var(--muted); font-weight: 400; margin-left: 6px; }
+.note { margin-top: 28px; text-align: center; font-size: 12px; color: var(--muted); }
+
+@media (min-width: 700px) {
+  .hero { min-height: 70vh; }
+}

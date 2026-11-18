@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#e8647c">
+  <title>Lộ trình thai kỳ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="hero">
+    <p class="eyebrow">Dự sinh <span id="dueText"></span></p>
+    <h1 id="weekBig">--</h1>
+    <p class="sub" id="weekSub"></p>
+
+    <div class="month-box">
+      <span class="label">Quy đổi theo tháng (1 tháng = 4 tuần)</span>
+      <b id="monthVal">--</b>
+      <small id="monthNote"></small>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><b id="leftVal">--</b><span>Còn lại</span></div>
+      <div class="stat"><b id="triVal">--</b><span>Giai đoạn</span></div>
+    </div>
+
+    <div class="bar"><div class="bar-fill" id="barFill"></div></div>
+    <p class="bar-label" id="barLabel"></p>
+    <p class="hint">Vuốt xuống để xem các tuần tới ↓</p>
+  </header>
+
+  <main>
+    <h2>Tuần hiện tại &amp; 8 tuần tới</h2>
+    <div id="upcoming" class="list"></div>
+
+    <details class="all">
+      <summary>Xem toàn bộ mốc tuần 1 → 40</summary>
+      <div id="timeline"></div>
+    </details>
+    <p class="note">Thông tin chỉ mang tính tham khảo, hãy theo lịch khám và tư vấn của bác sĩ.</p>
+  </main>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
