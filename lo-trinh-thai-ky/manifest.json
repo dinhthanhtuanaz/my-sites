@@ -1,0 +1,17 @@
+{
+  "name": "Lộ trình thai kỳ",
+  "short_name": "Thai kỳ",
+  "description": "Theo dõi tuần thai, quy đổi tháng và các mốc quan trọng",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fff7f5",
+  "theme_color": "#e8647c",
+  "lang": "vi",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
